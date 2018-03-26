@@ -25,9 +25,13 @@ export default class App extends Component {
   }
 
   render() {
-    if (!this.state.jwt) {
+    if (this.state.loading) {
       return (
-        <Auth newJWT={this.newJWT}/>
+        <Loading size={'large'} />
+       );
+    } else if (!this.state.jwt) {
+      return (
+        <Auth newJWT={this.newJWT} />
       );
     } else if (this.state.jwt) {
       return (
