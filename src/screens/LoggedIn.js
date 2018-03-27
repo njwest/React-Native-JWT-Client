@@ -7,12 +7,10 @@ export default class LoggedIn extends Component {
   constructor(props){
     super(props);
     this.state = {
+      loading: true,
       email: '',
-      error: '',
-      loading: true
+      error: ''
     }
-
-    this.onGetFail = this.onGetFail.bind(this);
   }
 
   componentDidMount(){
@@ -29,35 +27,35 @@ export default class LoggedIn extends Component {
         loading: false
       });
     }).catch((error) => {
-      console.log(error);
-      this.onGetFail();
-    });
-  }
-
-  onGetFail(){
-    this.setState({
-      loading: false,
-      error: 'Error retrieving data'
+      this.setState({
+        error: 'Error retrieving data',
+        loading: false
+      });
     });
   }
 
   render() {
-    if(this.state.loading){
+    const { container, emailText, errorText } = styles;
+    const { loading, email, error } = this.state;
+
+    if (loading){
       return(
-        <View style={styles.container}>
+        <View style={container}>
           <Loading size={'large'} />
         </View>
       )
     } else {
         return(
-          <View style={styles.container}>
+          <View style={container}>
             <View>
-              <Text style={styles.emailText}>
-                Your email: {this.state.email}
-              </Text>
-              <Text style={styles.errorTextStyle}>
-                {this.state.error}
-              </Text>
+              {email ?
+                <Text style={emailText}>
+                  Your email: {email}
+                </Text>
+                :
+                <Text style={errorText}>
+                  {error}
+                </Text>}
             </View>
             <Button onPress={this.props.deleteJWT}>
               Log Out
@@ -73,15 +71,12 @@ const styles = {
     flex: 1,
     justifyContent: 'center'
   },
-  textContainer: {
-    justifyContent: 'center',
-  },
   emailText: {
     alignSelf: 'center',
     color: 'black',
     fontSize: 20
   },
-  errorTextStyle: {
+  errorText: {
     alignSelf: 'center',
     fontSize: 18,
     color: 'red'
